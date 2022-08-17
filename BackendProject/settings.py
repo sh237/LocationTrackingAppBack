@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'api.apps.ApiConfig',
     'account.apps.AccountConfig',
+    'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -79,9 +80,12 @@ WSGI_APPLICATION = 'BackendProject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'HOST': 'localhost',
+        'NAME': 'postgisdb',
+        'USER': 'dbuser',
+        'PASSWORD': 'passwords',
+    } 
 }
 
 
