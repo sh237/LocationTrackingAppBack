@@ -9,7 +9,7 @@ class LocationSeriarizer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ['calendar', 'location', 'speed','created']
+        fields = ['calendar', 'location','created']
 
         extra_kwargs = {'calendar': {'write_only': True}}
 

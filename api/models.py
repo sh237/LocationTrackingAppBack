@@ -9,5 +9,4 @@ class Calendar(models.Model):
 class Location(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
     location = models.PointField(null=True, blank=True)
-    speed = models.FloatField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)

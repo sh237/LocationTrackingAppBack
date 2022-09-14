@@ -36,7 +36,7 @@ class User(AbstractBaseUser):
     date_of_birth = models.DateField()
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
+    username = models.CharField( max_length=30, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
