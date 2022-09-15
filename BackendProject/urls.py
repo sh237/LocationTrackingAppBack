@@ -17,12 +17,13 @@ from django.contrib import admin
 from django.urls import path,include
 from api import locationUrls as location
 from api import calendarUrls as calendar
-from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token, refresh_jwt_token
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/location/',include(location)),
     path('api/calendar/',include(calendar)),
-    path('auth', obtain_auth_token),
-    path('api/user/',include('account.urls')),
+    path('auth', include('account.urls')),
+
 ]

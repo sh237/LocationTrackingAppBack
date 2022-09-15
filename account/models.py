@@ -3,24 +3,27 @@ from django.contrib.auth.models import (BaseUserManager, AbstractBaseUser)
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, date_of_birth, password=None):
+    def create_user(self, email, date_of_birth,username, password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
         user = self.model(
             email=self.normalize_email(email),
             date_of_birth=date_of_birth,
+            username=username,
         )
 
         user.set_password(password)
         user.save(using=self._db)
+        print(user.username)
         return user
 
-    def create_superuser(self, email, date_of_birth, password):
+    def create_superuser(self, email, date_of_birth,username, password):
         user = self.create_user(
             email,
             password=password,
             date_of_birth=date_of_birth,
+            username=username,
         )
         user.is_admin = True
         user.save(using=self._db)
@@ -34,13 +37,13 @@ class User(AbstractBaseUser):
         unique=True,
     )
     date_of_birth = models.DateField()
+    username = models.CharField( max_length=30, blank=False)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-    username = models.CharField( max_length=30, blank=True)
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['date_of_birth']
+    REQUIRED_FIELDS = ['date_of_birth','username']
 
     def __str__(self):
         return self.email
