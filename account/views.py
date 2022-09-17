@@ -1,5 +1,5 @@
-from tokenize import Token
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from rest_framework.response import Response
@@ -7,6 +7,7 @@ from rest_framework import status
 from .models import User 
 from rest_framework import viewsets
 from .serializers import UserSerializer
+from rest_framework.views import APIView
 
 class UserViewSet(viewsets.ModelViewSet):#api/user/users
     queryset = User.objects.all()
@@ -25,7 +26,7 @@ class ManageUserView(generics.RetrieveUpdateAPIView):#api/user/myself
 
 class CreateUserAPIView(generics.CreateAPIView):
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny,]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -41,10 +42,25 @@ class CreateUserAPIView(generics.CreateAPIView):
             headers=headers
         )
 
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     serializer.create(request.data)
+    #     headers = self.get_success_headers(serializer.data)
+    #     # We create a token than will be used for future auth
+    #     token = Token.objects.create(user=serializer.instance)
+    #     token_data = {"token": token.key}
+    #     return Response(
+    #         {**serializer.data, **token_data},
+    #         status=status.HTTP_201_CREATED,
+    #         headers=headers
+    #     )
 
-class LogoutUserAPIView(generics.APIView):
+
+class LogoutUserAPIView(APIView):
     queryset = User.objects.all()
-
+    authentication_classes = (TokenAuthentication, )
     def get(self, request, format=None):
         # simply delete the token to force a login
         request.user.auth_token.delete()
