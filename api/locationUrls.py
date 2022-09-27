@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
-from .views import CreateLocationViewSet,LocationViewSet
+from .views import LocationViewSet,LocationUpdateAPIView
 
 app_name = 'location'
 router = DefaultRouter()
@@ -12,5 +12,6 @@ router.register('', LocationViewSet)
 
 urlpatterns = [
     path('', include(router.urls), name='crud'),
-    path('create/', CreateLocationViewSet.as_view(),name='create')
+    path('update/<int:calendar__id>', LocationUpdateAPIView.as_view(), name='update_location'),
+    # path('create/', CreateLocationViewSet.as_view(),name='create_location'),
 ]
