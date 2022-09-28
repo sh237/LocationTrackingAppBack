@@ -35,6 +35,7 @@ class User(AbstractBaseUser):
         unique=True,
     )
     username = models.CharField( max_length=30, blank=False)
+    theme_color = models.IntegerField(default=0, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = UserManager()
