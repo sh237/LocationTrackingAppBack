@@ -56,19 +56,6 @@ class UserThemeUpdateAPIView(APIView):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
-    # def patch(self, request, *args, **kwargs):
-    #     print(request.data)
-    #     print(kwargs)
-    #     print(self.kwargs)
-    #     pk = request.GET.get('pk')
-    #     print(pk)
-    #     instance = get_object_or_404(User, pk=pk)
-    #     serializer = UserUpdateSerializer(instance=instance, data=request.data, partial=True)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-
-    #     return Response({'result':True})
-
     def patch(self, request, *args, **kwargs):
         print("partial_update")
         data = request.data
@@ -80,8 +67,24 @@ class UserThemeUpdateAPIView(APIView):
         except KeyError:
             pass
         serializer = UserSerializer(user_object)
+        return Response(serializer.data)
 
+class UserIsTrackingUpdateAPIView(APIView):
+    queryset = User.objects.all()
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
 
+    def patch(self, request, *args, **kwargs):
+        print("partial_update")
+        data = request.data
+        print(data)
+        try:
+            user_object = User.objects.get(id=data['id'])
+            user_object.is_tracking = data['is_tracking']
+            user_object.save()
+        except KeyError:
+            pass
+        serializer = UserSerializer(user_object)
         return Response(serializer.data)
 
 class LogoutUserAPIView(APIView):
