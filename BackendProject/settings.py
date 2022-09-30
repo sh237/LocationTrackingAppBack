@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-ku4@46xzap_y3j=)3a)n+53=#jc_v1z^^@af3h&ximwd&@+s#)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.3.8','127.0.0.1']
 
 
 # Application definition
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api.apps.ApiConfig',
     'account.apps.AccountConfig',
     'django.contrib.gis',
+    'rest_framework_gis',
     'corsheaders',
 ]
 
@@ -60,7 +61,17 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'BackendProject.urls'
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8081',
+    'http://192.168.3.8:8081',
+    'http://192.168.3.8:8000',
+    'http://192.168.3.8:3000',
+    'http://192.168.3.12:3000',
+    'http://192.168.3.12:8000',
+    'http://192.168.3.12:8081',
+    'http://192.168.3.255:3000',
+    
 ]
 
 TEMPLATES = [
