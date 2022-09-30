@@ -36,6 +36,7 @@ class User(AbstractBaseUser):
     )
     username = models.CharField( max_length=30, blank=False)
     theme_color = models.IntegerField(default=0, blank=True)
+    is_tracing = models.BooleanField(default=True,blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = UserManager()
