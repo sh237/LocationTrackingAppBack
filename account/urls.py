@@ -3,7 +3,7 @@ from .views import UserThemeUpdateAPIView, UserIsTrackingUpdateAPIView, UserView
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 from .views import CreateUserAPIView,LogoutUserAPIView
-
+from .views import PasswordResetView
 router = routers.DefaultRouter()
 router.register('users', UserViewSet)
 
@@ -15,5 +15,8 @@ urlpatterns = [
     path('myself', ManageUserView.as_view(), name='auth_user_myself'),
     path('update/theme', UserThemeUpdateAPIView.as_view(), name='auth_user_update'),
     path('update/is_tracking', UserIsTrackingUpdateAPIView.as_view(), name='auth_user_update'),
-    path('',include(router.urls)),
+    path('user',include(router.urls)),
+    # path('password/reset', PasswordResetView.as_view()),
+    path('rest-auth', include('rest_auth.urls')),
+    path('', include('django.contrib.auth.urls')),
 ]
