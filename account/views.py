@@ -11,6 +11,19 @@ from rest_framework import viewsets
 from .serializers import UserSerializer, UserUpdateSerializer
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+from rest_framework.generics import GenericAPIView
+from .serializers import CustomPasswordResetSerializer
+
+class PasswordResetView(GenericAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CustomPasswordResetSerializer
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response('Password reset e-mail has been sent.', status=200)
+        return Response(serializer.errors, status=400)
 
 class UserViewSet(viewsets.ModelViewSet):#api/user/users
     queryset = User.objects.all()
