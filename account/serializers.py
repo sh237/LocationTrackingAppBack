@@ -1,6 +1,16 @@
 from rest_framework import serializers
 from .models import User
 from rest_framework.authtoken.models import Token
+from rest_auth.serializers import PasswordResetSerializer
+
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    def get_email_options(self):
+        data = {
+            'email_template_name': 'email/password_reset.html',
+            'subject_template_name': 'email/password_reset_subject.txt',
+        }
+        return data
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
