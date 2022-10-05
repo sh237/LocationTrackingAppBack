@@ -1,8 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-
+from django.contrib.auth.forms import PasswordResetForm 
+from rest_framework.exceptions import ValidationError
 from .models import User
-
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import (
+    authenticate, get_user_model, password_validation,
+)
 
 class UserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
@@ -27,6 +31,27 @@ class UserCreationForm(forms.ModelForm):
             user.save()
         return user
 
+# class SetPasswordFormCustom(PasswordResetForm):
+#     username = forms.CharField(max_length=254)
+#     field_order = ['username', 'email']
+
+#     def __init__(self, *args, **kwargs):
+#         super(SetPasswordFormCustom, self).__init__(*args, **kwargs)
+#         for field in self.fields:
+#             self.fields[field].widget.attrs = {'class': 'user-input-form'}
+
+class SetPasswordFormCustom(SetPasswordForm):
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Password'}),
+        strip=False,
+    )
+    new_password2 = forms.CharField(
+        label="Confirm new password",
+        strip=False,
+        widget=forms.PasswordInput(attrs={'class':'form-control','placeholder':'Confirm password'}),
+        help_text=password_validation.password_validators_help_text_html(),
+    )
 
 class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
@@ -38,3 +63,11 @@ class UserChangeForm(forms.ModelForm):
 
     def clean_password(self):
         return self.initial["password"]
+
+class PasswordResetForm(PasswordResetForm):
+    def get_users(self, email):
+        users = tuple(super().get_users(email))
+        if users:
+            return users
+        msg = _('"{email}" was not found in our system.')
+        raise ValidationError({'email': msg.format(email=email)})

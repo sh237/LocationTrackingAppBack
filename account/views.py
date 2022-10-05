@@ -4,19 +4,25 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
-
+from .forms import SetPasswordFormCustom
 from api import serializers
 from .models import User 
 from rest_framework import viewsets
 from .serializers import UserSerializer, UserUpdateSerializer
 from rest_framework.views import APIView
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from rest_framework.generics import GenericAPIView
-from .serializers import CustomPasswordResetSerializer
+from .serializers import CustomPasswordResetSerializer,PasswordResetConfirmSerializer
+from rest_auth.views import PasswordResetConfirmView 
 
 class PasswordResetView(GenericAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CustomPasswordResetSerializer
+
+    def __init__(self, *args, **kwargs):
+        """Prints the name of the class if it is used."""
+        print(self.__class__.__name__)
+        super().__init__(*args, **kwargs)
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -24,6 +30,8 @@ class PasswordResetView(GenericAPIView):
             serializer.save()
             return Response('Password reset e-mail has been sent.', status=200)
         return Response(serializer.errors, status=400)
+        
+
 
 class UserViewSet(viewsets.ModelViewSet):#api/user/users
     queryset = User.objects.all()
@@ -107,3 +115,30 @@ class LogoutUserAPIView(APIView):
         # simply delete the token to force a login
         request.user.auth_token.delete()
         return Response(status=status.HTTP_200_OK)
+
+def LoadPassWordResetConfirmView(request, uidb64, token):
+    # return PasswordResetConfirmView.as_view(template_name='password_reset_confirm.html')(request, uidb64=uidb64, token=token)
+    return render(request, 'email/password_reset_confirm.html', {'uidb64': uidb64, 'token': token})
+
+class PasswordResetConfirmView(GenericAPIView):
+    """
+    Password reset e-mail link is confirmed, therefore
+    this resets the user's password.
+    Accepts the following POST parameters: token, uid,
+        new_password1, new_password2
+    Returns the success/fail message.
+    """
+    serializer_class = PasswordResetConfirmSerializer
+    permission_classes = (AllowAny,)
+    set_password_form = SetPasswordFormCustom
+
+    def dispatch(self, *args, **kwargs):
+        return super(PasswordResetConfirmView, self).dispatch(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Password has been reset with the new password."}
+        )
