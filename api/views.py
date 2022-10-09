@@ -1,11 +1,10 @@
 from rest_framework import generics
-from .serializers import LocationSeriarizer, CalendarSeriarizer
-from .models import Location
-from .models import Calendar
+from .serializers import LocationExitSeriarizer, LocationSeriarizer, CalendarSeriarizer, PhotoSeriarizer
+from .models import Location, Calendar, Photo
 from rest_framework import viewsets
 from rest_framework_gis.filters import DistanceToPointFilter
 from rest_framework import filters
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.authentication import TokenAuthentication
 from django.shortcuts import  get_object_or_404
 from rest_framework.response import Response
@@ -82,6 +81,52 @@ class CalendarViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+class PhotoViewSet(viewsets.ModelViewSet):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSeriarizer
+    filter_backends = [filters.SearchFilter]
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    search_fields = ['=uri']
+    lookup_field = 'calendar__id'
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        # We create a token than will be used for future auth
+        return Response(
+            {**serializer.data},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+        
+
+class CalendarMonthViewSet(generics.ListAPIView):
+    queryset = Calendar.objects.all()
+    serializer_class = CalendarSeriarizer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^date']
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    lookup_field = 'user__id'
+    def get_queryset(self):
+        print(self.request.user)
+        user = self.request.user
+        return Calendar.objects.filter(user_id=user.id)
+
+class LocationExitViewSet(generics.ListAPIView):
+    queryset = Location.objects.all()
+    serializer_class = LocationExitSeriarizer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['^calendar__date']
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    lookup_field = 'calendar__user__id'
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return Location.objects.filter(calendar_user_id=user.id)
 
 class MultipleFieldLookupMixin(object):
     def get_object(self):

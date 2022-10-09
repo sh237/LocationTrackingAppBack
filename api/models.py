@@ -1,3 +1,4 @@
+from enum import unique
 from django.conf import settings
 from django.contrib.gis.db import models
 from django.utils import timezone
@@ -18,3 +19,9 @@ class Location(models.Model):
     calendar = models.OneToOneField(Calendar, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
     mpoint = models.MultiPointField(blank=True)
+
+class Photo(models.Model):
+    calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
+    uri = models.CharField(max_length=300,unique=True)
+    longitude = models.FloatField(blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)

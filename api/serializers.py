@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from api.models import Location, Calendar
+from api.models import Location, Calendar, Photo
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
-
 
 class LocationSeriarizer(GeoFeatureModelSerializer):
 
@@ -24,7 +23,6 @@ class LocationSeriarizer(GeoFeatureModelSerializer):
         instance.save()
         return instance
 
-
 class CalendarSeriarizer(serializers.ModelSerializer):
 
     created = serializers.DateTimeField(format='%Y-%m-%d', read_only=True)
@@ -39,4 +37,38 @@ class CalendarSeriarizer(serializers.ModelSerializer):
             print("instance",instance)
             instance.save()
             return instance
+
+            
+class LocationExitSeriarizer(serializers.ModelSerializer):
+    calendar = CalendarSeriarizer(read_only=True)
+    class Meta:
+        model = Location
+        fields = ['id','calendar']
+        # geo_field = 'mpoint'
+
+class PhotoSeriarizer(serializers.ModelSerializer):
+    calendar = CalendarSeriarizer(read_only=True)
+    calendar_id = serializers.PrimaryKeyRelatedField(queryset=Calendar.objects.all(),write_only=True)
+    class Meta:
+        model = Photo
+        fields = ['id','calendar', 'uri','latitude','longitude','calendar_id']
+
+    def create(self, validated_date):
+        validated_date['calendar'] = validated_date.get('calendar_id', None)
+
+        if validated_date['calendar'] is None:
+            raise serializers.ValidationError("calendar not found.") 
+
+        del validated_date['calendar_id']
+
+        return Photo.objects.create(**validated_date)
+
+    def update(self, instance, validated_date):
+        instance.calendar = validated_date.get('calendar_id', None)
+        instance.uri = validated_date.get('uri', None)
+        instance.latitude = validated_date.get('latitude', None)
+        instance.longitude = validated_date.get('longitude', None)
+        instance.save()
+        return instance
+
 
