@@ -17,12 +17,14 @@ from django.contrib import admin
 from django.urls import path,include
 from api import locationUrls as location
 from api import calendarUrls as calendar
+from api import photoUrls as photo
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/location/',include(location)),
     path('api/calendar/',include(calendar)),
+    path('api/photo/',include(photo)),
     path('auth/', include('account.urls')),
 
 ]
