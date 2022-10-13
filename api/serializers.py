@@ -51,7 +51,7 @@ class PhotoSeriarizer(serializers.ModelSerializer):
     calendar_id = serializers.PrimaryKeyRelatedField(queryset=Calendar.objects.all(),write_only=True)
     class Meta:
         model = Photo
-        fields = ['id','calendar', 'uri','latitude','longitude','calendar_id']
+        fields = ['id','calendar', 'filename','latitude','longitude','calendar_id']
 
     def create(self, validated_date):
         validated_date['calendar'] = validated_date.get('calendar_id', None)
@@ -65,7 +65,7 @@ class PhotoSeriarizer(serializers.ModelSerializer):
 
     def update(self, instance, validated_date):
         instance.calendar = validated_date.get('calendar_id', None)
-        instance.uri = validated_date.get('uri', None)
+        instance.uri = validated_date.get('filename', None)
         instance.latitude = validated_date.get('latitude', None)
         instance.longitude = validated_date.get('longitude', None)
         instance.save()

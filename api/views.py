@@ -88,7 +88,7 @@ class PhotoViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
-    search_fields = ['=uri']
+    search_fields = ['=filename']
     lookup_field = 'calendar__id'
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -115,6 +115,19 @@ class CalendarMonthViewSet(generics.ListAPIView):
         print(self.request.user)
         user = self.request.user
         return Calendar.objects.filter(user_id=user.id)
+
+class PhotoListViewSet(generics.ListAPIView):
+    queryset = Photo.objects.all()
+    serializer_class = PhotoSeriarizer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['=filename']
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    lookup_field = 'calendar__id'
+    # def get_queryset(self):
+        # print(self.request.user)
+        # user = self.request.user
+        # return Photo.objects.filter(calendar__id=self.kwargs['calendar__id'])
 
 class LocationExitViewSet(generics.ListAPIView):
     queryset = Location.objects.all()

@@ -22,6 +22,6 @@ class Location(models.Model):
 
 class Photo(models.Model):
     calendar = models.ForeignKey(Calendar, on_delete=models.CASCADE)
-    uri = models.CharField(max_length=300,unique=True)
+    filename = models.CharField(max_length=50,unique=True)
     longitude = models.FloatField(blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
