@@ -1,0 +1,6 @@
+-r requirements-dev.txt
+gunicorn
+psycopg2
+psycopg2 
+psycopg2-binary 
+Pillow
