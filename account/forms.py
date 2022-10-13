@@ -69,5 +69,5 @@ class PasswordResetForm(PasswordResetForm):
         users = tuple(super().get_users(email))
         if users:
             return users
-        msg = _('"{email}" was not found in our system.')
+        msg = '"{email}" was not found in our system.'
         raise ValidationError({'email': msg.format(email=email)})
