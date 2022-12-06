@@ -1,6 +1,14 @@
--r requirements-dev.txt
-gunicorn
-psycopg2
-psycopg2 
-psycopg2-binary 
-Pillow
+asgiref==3.5.2
+Django==3.2
+django-cors-headers==3.13.0
+django-environ==0.9.0
+django-filter==22.1
+django-geojson==3.2.1
+django-rest-auth==0.9.5
+djangorestframework==3.13.1
+djangorestframework-gis==1.0
+psycopg2==2.9.3
+PyJWT==1.7.1
+pytz==2022.2.1
+six==1.16.0
+sqlparse==0.4.2
