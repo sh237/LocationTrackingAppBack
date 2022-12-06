@@ -54,24 +54,24 @@ python manage.py runserver
 By creating a superuser, you can log in to the admin site and even get a Token by means of an API endpoint called auth. By including the Token in the header of the HTTP request, various APIs can be called.
 
 The auth endpoint allows users to log in, create new accounts, log out, delete accounts, etc.
-- auth/login allows you to obtain a token for login by posting the correct email address and password.
-- register allows you to create a new user by POSTing the user's information.
-- logout removes the user's Token and puts the user in a logout state.
-- myself return user information by including the token in the header.
-- update/theme allows you to update theme color settings.
-- update/is_tracking allows you to update location tracking settings.
-- user allows crud operations of user model.
-- password/reset send a password reset email by posting the email address.
-- rest-auth allows you to access to django-rest-auth.
-- reset/<uidb64>/<token> change the user's password if the authentication by the password reset email is correct.
+- auth/login    allows you to obtain a token for login by posting the correct email address and password.
+- register    allows you to create a new user by POSTing the user's information.
+- logout    removes the user's Token and puts the user in a logout state.
+- myself    return user information by including the token in the header.
+- update/theme    allows you to update theme color settings.
+- update/is_tracking     allows you to update location tracking settings.
+- user     allows crud operations of user model.
+- password/reset     send a password reset email by posting the email address.
+- rest-auth    allows you to access to django-rest-auth.
+- reset/<uidb64>/<token>    change the user's password if the authentication by the password reset email is correct.
 
 The api/location allows you to call APIs that handle location information. Specifically, 
-- api/location   allows crud operations. 
-- api/location/update/<int:calendar__id>   can be used to update existing data.
-- api/location/month/<int:user__id>   can be used to obtain an array of location data for each month.
+- api/location    allows crud operations. 
+- api/location/update/<int:calendar__id>     can be used to update existing data.
+- api/location/month/<int:user__id>     can be used to obtain an array of location data for each month.
 The api/calendar endpoint allows calling the API for handling calendar data.
-- api/calendar allows crud operations.
-- api/calendar/month can be used to obtain daily events.
+- api/calendar    allows crud operations.
+- api/calendar/month    can be used to obtain daily events.
 
 # Note
 
